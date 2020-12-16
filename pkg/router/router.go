@@ -10,7 +10,7 @@ func InitRouter(r *gin.Engine) {
 	{
 		auth := api.Group("auth")
 		{
-			auth.GET("/hello", router.Helloworld)
+			auth.GET("/hello",router.Helloworld)
 		}
 		blog := api.Group("blog")
 		{
@@ -18,7 +18,7 @@ func InitRouter(r *gin.Engine) {
 		}
 		team := api.Group("team")
 		{
-			team.GET("")
+			team.POST("/creatTeam",CreatTeam)
 		}
 		inviting := api.Group("inviting")
 		{
