@@ -5,7 +5,7 @@ const (
 	COOKIE_NAME = "token"
 	//Token is invalid in one month
 	EXPIRE_TIME_TOKEN = 30 * 24 * 60 * 60
-	TOKEN_SCRECT_KEY = "tokenemail"
+	TOKEN_SCRECT_KEY  = "tokenemail"
 
 	//Verify code is vaild in 20min
 	VERIFYCODE_VALID_TIME = 1200
@@ -25,4 +25,3 @@ const (
 
 	REDIS_VERIFY_CODE_SUFFIX = "verify_code:"
 )
-

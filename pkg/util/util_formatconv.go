@@ -33,4 +33,3 @@ func ParseTimeStampToReadableTime(timestamp int64) time.Time {
 	tm := time.Unix(i, 0).In(loc)
 	return tm
 }
-
