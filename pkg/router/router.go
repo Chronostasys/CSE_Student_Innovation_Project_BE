@@ -18,7 +18,8 @@ func InitRouter(r *gin.Engine) {
 		}
 		team := api.Group("team")
 		{
-			team.POST("/creatTeam",CreatTeam)
+			team.POST("",CreatTeam)
+			team.DELETE("",DeleteTeam)
 		}
 		inviting := api.Group("inviting")
 		{
