@@ -5,6 +5,10 @@ import "github.com/gin-gonic/gin"
 func Router(r *gin.Engine){
 	api:=r.Group("/api")
 	{
-		api.POST("/blog",AddBlog)
+		blog:=api.Group("/blog")
+		{
+			blog.POST("/add",AddBlog)
+			blog.DELETE("/delete",DeleteBlog)
+		}
 	}
 }

@@ -17,3 +17,18 @@ func AddBlog(auth_email string,title string,content string,team_id uint)(blog mo
 	db.Create(&blog)
 	return blog
 }
+
+func DeleteBlog(id int,auth_email string)(isDeleted bool,err error){
+	var blog models.Blog
+	db.Where("id = ?",id).First(&blog)
+	if blog.Auth_Email!=auth_email{
+		isDeleted=false
+		return
+	}
+	err=db.Where("id = ?",id).Delete(&blog).Error
+	if err!=nil{
+		isDeleted=false
+		return
+	}
+	return true,nil
+}
