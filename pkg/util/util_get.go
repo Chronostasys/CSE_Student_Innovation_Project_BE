@@ -1,1 +1,36 @@
 package util
+
+import (
+	"dgrijalva/jwt-go"
+	"errors"
+	"github.com/Pivot-Studio/CSE_Student_Innovation_Project/pkg/consts"
+	"github.com/gin-gonic/gin"
+)
+
+func GetEmailFromCookie(c *gin.Context) (email string, err error) {
+	defer func() {
+		if e := recover(); e != nil {
+			err = errors.New("您未登录，请登陆后查看")
+		}
+	}()
+	cookie, err := c.Cookie(consts.COOKIE_NAME)
+	if err != nil {
+		err = errors.New("您未登录，请登陆后查看")
+		return
+	}
+	claim, _ := GetClaimFromToken(cookie)
+	email = claim.(jwt.MapClaims)["email"].(string)
+	return
+}
+func GetClaimFromToken(tokenString string) (claims jwt.Claims, err error) {
+	var token *jwt.Token
+	token, err = jwt.Parse(tokenString, func(*jwt.Token) (interface{}, error) {
+		return []byte(consts.TOKEN_SCRECT_KEY), err
+	})
+	if err != nil {
+		return nil, err
+	} else {
+		claims = token.Claims.(jwt.MapClaims)
+		return claims, nil
+	}
+}
