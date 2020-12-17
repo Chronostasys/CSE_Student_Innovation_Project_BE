@@ -65,7 +65,7 @@ func DeleteTeam(context *gin.Context) {
 		return
 	}
 }
-func ChangeContentOfTeam(context *gin.Context){
+func ChangeDetailOfTeam(context *gin.Context){
 	teamID,_ := strconv.Atoi(context.PostForm("team_id"))
 	newTeamName:=context.PostForm("new_team_name")
 	mileStoneUpdate:=context.PostForm("mile_stone_update")
@@ -77,7 +77,7 @@ func ChangeContentOfTeam(context *gin.Context){
 		})
 		return
 	}else{
-		services.ChangeTeamContentInDB(uint(teamID),newTeamName,mileStoneUpdate,descriptionUpdate)
+		services.ChangeTeamDetailInDB(uint(teamID),newTeamName,mileStoneUpdate,descriptionUpdate)
 		context.JSON(http.StatusOK, gin.H{
 			"msg": "修改组织信息成功",
 		})

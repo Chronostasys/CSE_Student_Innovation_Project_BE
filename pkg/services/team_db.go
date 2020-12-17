@@ -22,14 +22,14 @@ func IsTeamExist(teamID uint)(is_team_exist bool){
 	}
 	return true
 }
-func ChangeTeamContentInDB(teamID uint,newTeamName string,mileStoneUpdate string,descriptionUpdate string){
+func ChangeTeamDetailInDB(teamID uint,newTeamName string,mileStoneUpdate string,descriptionUpdate string){
 	var team models.Team
 	db.Where("ID=?", teamID).Find(&team)
 
-	team.Description=descriptionUpdate
-	team.Name=newTeamName
-	team.Mile_Stone=mileStoneUpdate
-	
-	db.Save(team)
+	team.Description = descriptionUpdate
+	team.Name = newTeamName
+	team.Mile_Stone = mileStoneUpdate
+
+	db.Save(&team)
 
 }
