@@ -6,6 +6,7 @@ import (
 	"github.com/Pivot-Studio/CSE_Student_Innovation_Project/pkg/services"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 func CreatTeam(context *gin.Context) {
@@ -49,18 +50,38 @@ func CreatTeam(context *gin.Context) {
 }
 
 func DeleteTeam(context *gin.Context) {
-	teamName := context.PostForm("team_name")
-	is_team_exist := services.IsTeamExist(teamName)
-	services.DeleteTeamInDB(teamName)
+	teamID,_ := strconv.Atoi(context.PostForm("team_id"))
+	is_team_exist := services.IsTeamExist(uint(teamID))
 	if !is_team_exist {
 		context.JSON(http.StatusBadRequest, gin.H{
 			"msg": "该组织不存在",
 		})
 		return
 	}else{
+		services.DeleteTeamInDB(uint(teamID))
 		context.JSON(http.StatusOK, gin.H{
 			"msg": "组织删除成功",
 		})
 		return
 	}
+}
+func ChangeContentOfTeam(context *gin.Context){
+	teamID,_ := strconv.Atoi(context.PostForm("team_id"))
+	newTeamName:=context.PostForm("new_team_name")
+	mileStoneUpdate:=context.PostForm("mile_stone_update")
+	descriptionUpdate:=context.PostForm("description_update")
+	is_team_exist := services.IsTeamExist(uint(teamID))
+	if !is_team_exist {
+		context.JSON(http.StatusBadRequest, gin.H{
+			"msg": "该组织不存在",
+		})
+		return
+	}else{
+		services.ChangeTeamContentInDB(uint(teamID),newTeamName,mileStoneUpdate,descriptionUpdate)
+		context.JSON(http.StatusOK, gin.H{
+			"msg": "修改组织信息成功",
+		})
+		return
+	}
+
 }

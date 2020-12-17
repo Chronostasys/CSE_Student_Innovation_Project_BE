@@ -20,6 +20,7 @@ func InitRouter(r *gin.Engine) {
 		{
 			team.POST("",CreatTeam)
 			team.DELETE("",DeleteTeam)
+			team.PUT("",ChangeContentOfTeam)
 		}
 		inviting := api.Group("inviting")
 		{
