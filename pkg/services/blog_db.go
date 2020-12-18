@@ -26,3 +26,12 @@ func DeleteBlog(blog_id uint,auth_email string)(isDeleted bool,err error){
 	}
 	return true,nil
 }
+
+func GetBlogs(team_id uint,start_id int,list_size int,is_descend bool)(blogs []models.Blog){
+	if is_descend {
+		db.Offset(start_id-1).Limit(list_size).Order("created_at desc").Where("team_id=?", team_id).Find(&blogs)
+	} else {
+		db.Offset(start_id-1).Limit(list_size).Where("team_id=?", team_id).Find(&blogs)
+	}
+	return blogs
+}

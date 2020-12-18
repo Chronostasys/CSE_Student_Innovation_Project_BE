@@ -66,3 +66,36 @@ func DeleteBlog(context *gin.Context){
 		"msg":"删除成功",
 	})
 }
+
+func GetBlogs(context *gin.Context){
+	team_id,_:=strconv.Atoi(context.PostForm("team_id"))
+	start_id,_:=strconv.Atoi(context.PostForm("start_id"))
+	list_size,_:=strconv.Atoi( context.PostForm("list_size"))
+	is_descend,_:=strconv.ParseBool(context.PostForm("is_descend"))
+	auth_email,_:=util.GetEmailFromCookie(context)
+	teamMember:=services.GetTeamMemberFromEmail(auth_email)
+	if teamMember.Team_Id!=uint(team_id){
+		context.JSON(http.StatusBadRequest,gin.H{
+			"msg":"不在队伍中，无法查看",
+		})
+		return
+	}
+	if start_id<0||list_size<0{
+		context.JSON(http.StatusBadRequest, gin.H{
+			"msg": "不合规的id或表长",
+		})
+		return
+	}
+	blogs:=services.GetBlogs(uint(team_id),start_id,list_size,is_descend)
+	results:=[]map[string]interface{}{}
+	for _,temp:=range blogs{
+		results=append(results,map[string]interface{}{
+			"title":temp.Title,
+			"auth_email":temp.Auth_Email,
+			"content":temp.Content,
+		})
+	}
+	context.JSON(http.StatusOK,gin.H{
+		"msg":results,
+	})
+}
