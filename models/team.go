@@ -2,7 +2,7 @@ package models
 
 import "github.com/jinzhu/gorm"
 
-type Team struct {
+type Team struct{
 	gorm.Model
 	Name          string
 	Owner_email   string
@@ -14,3 +14,4 @@ type TeamMember struct {
 	Team_Id uint
 	Email   string
 }
+
