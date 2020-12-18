@@ -33,3 +33,7 @@ func ChangeTeamDetailInDB(teamID uint,newTeamName string,mileStoneUpdate string,
 	db.Save(&team)
 
 }
+func GetTeams(startID uint,listSize int)(teams []models.Team){
+	db.Order("ID").Offset(startID).Limit(listSize).Find(&teams)
+	return
+}

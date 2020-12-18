@@ -85,3 +85,22 @@ func ChangeDetailOfTeam(context *gin.Context){
 	}
 
 }
+func GetTeamsList(context *gin.Context){
+	startID, _ := strconv.Atoi(context.Query("start_id"))
+	listSize, _ := strconv.Atoi(context.Query("list_size"))
+	teams := services.GetTeams(uint(startID), listSize)
+	results := []map[string]interface{}{}
+	for _, value := range teams {
+		userName:=services.GetUserNameByEmail(value.Owner_email)
+		results = append(results, map[string]interface{}{
+			"TeamName" :          value.Name,
+			"Username":		  	  userName,
+			"Description":        value.Description,
+			"Mile_Stone":		  value.Mile_Stone,
+
+		})
+
+	}
+	context.JSON(http.StatusOK, results)
+	return
+}
