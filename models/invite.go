@@ -6,6 +6,6 @@ type Invite struct {
 	gorm.Model
 	Owner_email   	string
 	Team_Id	  		int
-	Description   	string
 	MemberInvited 	string
+	Is_accepted     int
 }

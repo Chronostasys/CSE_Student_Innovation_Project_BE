@@ -2,7 +2,6 @@ package router
 
 import (
 	"github.com/Pivot-Studio/Authorization-Template/pkg/util"
-	"github.com/Pivot-Studio/CSE_Student_Innovation_Project/models"
 	"github.com/Pivot-Studio/CSE_Student_Innovation_Project/pkg/services"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -13,13 +12,7 @@ func InviteTeamMember(context *gin.Context){
 	email,_:= util.GetEmailFromCookie(context)
 	team_id,_ :=strconv.Atoi(context.PostForm("team_id"))
 	description:=context.PostForm("description")
-	memberInvited:=context.PostForm("email_id")
-	invite:=models.Invite{
-		Owner_email:email,
-		Team_Id:team_id,
-		Description:description,
-		MemberInvited:memberInvited,
-	}
+	memberInvited:=context.PostForm("email_accept")
 	if team_id==0{
 		context.JSON(http.StatusBadRequest, gin.H{
 			"msg":  "请添加组织id",
@@ -39,7 +32,6 @@ func InviteTeamMember(context *gin.Context){
 		return
 	}
 	services.InviteMemberToTeam(email,team_id,description,memberInvited)
-	services.AddTeamMemberInDB(invite)
 	context.JSON(http.StatusOK, gin.H{
 		"msg":  "已邀请",
 	})
