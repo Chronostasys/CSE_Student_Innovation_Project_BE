@@ -104,3 +104,23 @@ func GetTeamsList(context *gin.Context){
 	context.JSON(http.StatusOK, results)
 	return
 }
+func GetTeam(context *gin.Context){
+	teamId,_ := strconv.Atoi(context.Param("hole_id"))
+	team,err:=services.GetTeamByID(uint(teamId))
+	if err!=nil{
+		context.JSON(http.StatusBadRequest, gin.H{
+			"msg": "该组织不存在",
+		})
+		return
+	}
+	userName:=services.GetUserNameByEmail(team.Owner_email)
+	result:=map[string]interface{}{
+		"TeamName" :          team.Name,
+		"Username":		  	  userName,
+		"Description":        team.Description,
+		"Mile_Stone":		  team.Mile_Stone,
+	}
+	context.JSON(http.StatusOK, result)
+	return
+
+}

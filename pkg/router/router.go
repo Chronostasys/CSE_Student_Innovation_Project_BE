@@ -20,6 +20,7 @@ func InitRouter(r *gin.Engine) {
 		team := api.Group("team")
 		{
 			team.GET("",GetTeamsList)
+			team.GET("/:hole_id",GetTeam)
 			team.POST("", CreatTeam)
 			team.DELETE("", DeleteTeam)
 			team.PUT("", ChangeDetailOfTeam)

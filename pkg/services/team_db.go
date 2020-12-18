@@ -37,3 +37,8 @@ func GetTeams(startID uint,listSize int)(teams []models.Team){
 	db.Order("ID").Offset(startID).Limit(listSize).Find(&teams)
 	return
 }
+
+func GetTeamByID(teamID uint)(team models.Team,err error){
+	err=db.Where("ID =?", teamID).Find(&team).Error
+	return
+}
