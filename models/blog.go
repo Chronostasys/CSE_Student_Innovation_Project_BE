@@ -8,4 +8,5 @@ type Blog struct {
 	Auth_Email string
 	Title      string
 	Content    string
+
 }
