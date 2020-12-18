@@ -18,19 +18,7 @@ func AcceptInvite(context *gin.Context){
 		MemberInvited:email_accept,
 		Is_accepted:1,
 	}
-	if Owner_email==""{
-		context.JSON(http.StatusBadRequest, gin.H{
-			"msg":  "错误",
-		})
-		return
-	}
-	if team_id==0{
-		context.JSON(http.StatusBadRequest, gin.H{
-			"msg":  "组织不存在",
-		})
-		return
-	}
-	if email_accept==""{
+	if Owner_email==""||team_id==0||email_accept==""{
 		context.JSON(http.StatusBadRequest, gin.H{
 			"msg":  "错误",
 		})

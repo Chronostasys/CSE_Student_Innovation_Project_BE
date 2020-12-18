@@ -26,8 +26,8 @@ func InitRouter(r *gin.Engine) {
 		inviting := api.Group("inviting")
 		{
 			inviting.GET("")
-			inviting.POST("",InviteTeamMember)
-			inviting.POST("",AcceptInvite)
+			inviting.POST("/invite",InviteTeamMember)
+			inviting.POST("/accept",AcceptInvite)
 		}
 	}
 }
