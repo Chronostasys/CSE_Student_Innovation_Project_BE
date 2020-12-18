@@ -13,12 +13,11 @@ func InviteTeamMember(context *gin.Context){
 	email,_:= util.GetEmailFromCookie(context)
 	team_id,_ :=strconv.Atoi(context.PostForm("team_id"))
 	description:=context.PostForm("description")
-	memberInvited:=context.PostForm("email_id")
-	invite:=models.Invite{
-		Owner_email:email,
+	memberInvited:=context.PostForm("email_accept")
+	Invite_Record:=models.Invite_Record{
 		Team_Id:team_id,
-		Description:description,
 		MemberInvited:memberInvited,
+		Is_accepted:0,
 	}
 	if team_id==0{
 		context.JSON(http.StatusBadRequest, gin.H{
@@ -39,7 +38,7 @@ func InviteTeamMember(context *gin.Context){
 		return
 	}
 	services.InviteMemberToTeam(email,team_id,description,memberInvited)
-	services.AddTeamMemberInDB(invite)
+	services.AddInvite_RecordInDB(Invite_Record)
 	context.JSON(http.StatusOK, gin.H{
 		"msg":  "已邀请",
 	})

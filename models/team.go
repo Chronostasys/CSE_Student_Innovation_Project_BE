@@ -13,5 +13,6 @@ type TeamMember struct {
 	gorm.Model
 	Team_Id uint
 	Email   string
+
 }
 
