@@ -18,7 +18,7 @@ func InviteMemberToTeam(email_from string,team_id int,description string,email_t
 	//这里等着前端给我写html啦
 	Owner_email:=email_from
 	email_accept:=email_to
-	url:=CreatEmailContentUrl(Owner_email,team_id,description,email_accept)
+	url:=CreatEmailContentUrl(Owner_email,team_id,email_accept)
 	m.SetBody("text/html", url+description)
 	// 附件
 	//m.Attach("/home/Alex/lolcat.jpg")
