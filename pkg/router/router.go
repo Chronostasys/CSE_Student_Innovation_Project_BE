@@ -16,6 +16,7 @@ func InitRouter(r *gin.Engine) {
 		{
 			blog.POST("/add", AddBlog)
 			blog.DELETE("/delete", DeleteBlog)
+			blog.GET("/get",GetBlogs)
 		}
 		team := api.Group("team")
 		{
