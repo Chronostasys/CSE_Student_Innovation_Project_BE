@@ -1,11 +1,13 @@
 package services
 
 import (
+	_ "database/sql"
 	"fmt"
 	atmodels "github.com/Pivot-Studio/Authorization-Template/models"
 	"github.com/Pivot-Studio/Authorization-Template/pkg/util"
 	"github.com/Pivot-Studio/CSE_Student_Innovation_Project/models"
 	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
 var db *gorm.DB

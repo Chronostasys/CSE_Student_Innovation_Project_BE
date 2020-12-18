@@ -1,5 +1,5 @@
 package services
-import "github.com/Pivot-Studio/CSE_Student_Innovation_Project/models"
+import "github.com/Pivot-Studio/Authorization-Template/models"
 
 func GetUserNameByEmail(ownerEmail string)(userName string){
 	var authUser models.AuthUser
