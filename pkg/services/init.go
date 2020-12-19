@@ -3,9 +3,10 @@ package services
 import (
 	_ "database/sql"
 	"fmt"
-	atmodels "github.com/Pivot-Studio/Authorization-Template/models"
-	"github.com/Pivot-Studio/Authorization-Template/pkg/util"
+	atmodels "github.com/Pivot-Studio/Authorization-Template/ATmodels"
+	"github.com/Pivot-Studio/Authorization-Template/pkg/ATutil"
 	"github.com/Pivot-Studio/CSE_Student_Innovation_Project/models"
+	"github.com/Pivot-Studio/CSE_Student_Innovation_Project/pkg/util"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
@@ -21,7 +22,7 @@ func init(){
 	databaseInit()
 }
 func databaseInit() {
-	conf := util.ReadSettingsFromFile("Config.json")
+	conf := ATutil.ReadSettingsFromFile("Config.json")
 	settings := conf.DbSettings
 	connStr := dsn(settings)
 
@@ -32,9 +33,9 @@ func databaseInit() {
 	var blog models.Blog
 	var team models.Team
 	var user atmodels.AuthUser
-	var invite models.Invite
+	var invite models.Invite_Record
 	var temp []interface{}
 
 	temp = append(temp,&blog,&team,&invite,&user)
-	util.CreateTableIfNotExist(db, temp)
+	ATutil.CreateTableIfNotExist(db, temp)
 }

@@ -24,6 +24,7 @@ func InviteMemberToTeam(email_from string,team_id int,description string,email_t
 	//m.Attach("/home/Alex/lolcat.jpg")
 	// stmp服务，端口号，发送邮件账号，发送账号密码
 
+	d := gomail.NewDialer("smtp.163.com", 25, "blabla", "XXXXXXXXXXXXXXXX")
 	// Send the email to Bob, Cora and Dan.
 	if err := d.DialAndSend(m); err != nil {
 		panic(err)

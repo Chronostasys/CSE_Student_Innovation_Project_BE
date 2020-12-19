@@ -1,7 +1,7 @@
 package router
 
 import (
-	"github.com/Pivot-Studio/Authorization-Template/pkg/util"
+	"github.com/Pivot-Studio/Authorization-Template/pkg/ATutil"
 	"github.com/Pivot-Studio/CSE_Student_Innovation_Project/models"
 	"github.com/Pivot-Studio/CSE_Student_Innovation_Project/pkg/services"
 	"github.com/gin-gonic/gin"
@@ -10,7 +10,7 @@ import (
 )
 
 func InviteTeamMember(context *gin.Context){
-	email,_:= util.GetEmailFromCookie(context)
+	email,_:= ATutil.GetEmailFromCookie(context)
 	team_id,_ :=strconv.Atoi(context.PostForm("team_id"))
 	description:=context.PostForm("description")
 	memberInvited:=context.PostForm("email_accept")

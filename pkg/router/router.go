@@ -1,7 +1,7 @@
 package router
 
 import (
-	"github.com/Pivot-Studio/Authorization-Template/pkg/router"
+	"github.com/Pivot-Studio/Authorization-Template/pkg/ATrouter"
 	"github.com/gin-gonic/gin"
 )
 
@@ -10,7 +10,7 @@ func InitRouter(r *gin.Engine) {
 	{
 		auth := api.Group("auth")
 		{
-			auth.GET("/hello", router.Helloworld)
+			auth.GET("/hello", ATrouter.Helloworld)
 		}
 		blog := api.Group("/blog")
 		{

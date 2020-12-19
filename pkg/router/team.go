@@ -1,7 +1,7 @@
 package router
 
 import (
-	"github.com/Pivot-Studio/Authorization-Template/pkg/util"
+	"github.com/Pivot-Studio/Authorization-Template/pkg/ATutil"
 	"github.com/Pivot-Studio/CSE_Student_Innovation_Project/models"
 	"github.com/Pivot-Studio/CSE_Student_Innovation_Project/pkg/services"
 	"github.com/gin-gonic/gin"
@@ -11,7 +11,7 @@ import (
 
 func CreatTeam(context *gin.Context) {
 	teamName:= context.PostForm("team_name")
-	email,_:= util.GetEmailFromCookie(context)
+	email,_:= ATutil.GetEmailFromCookie(context)
 	description:= context.PostForm("description")
 	mile_stone:= context.PostForm("email")
 	team:=models.Team{
