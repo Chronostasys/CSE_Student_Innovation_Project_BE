@@ -4,5 +4,10 @@
     "Password": "root",
     "Hostname": "127.0.0.1",
     "Dbname":"InnovationProject1"
+  },
+  "EmailSenderSettings":{
+    "email":"your account",
+    "password":"your email token",
+    "servername":"smtp.163.com:465"
   }
 }
