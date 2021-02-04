@@ -30,7 +30,7 @@ func InitRouter(r *gin.Engine) {
 		team := api.Group("team")
 		{
 			team.GET("",GetTeamsList)
-			team.GET("/:hole_id",GetTeam)
+			team.GET("/:team_id",GetTeam)
 			team.POST("", CreatTeam)
 			team.DELETE("", DeleteTeam)
 			team.PUT("", ChangeDetailOfTeam)
@@ -40,6 +40,10 @@ func InitRouter(r *gin.Engine) {
 			inviting.GET("")
 			inviting.POST("/invite",InviteTeamMember)
 			inviting.POST("/accept",AcceptInvite)
+		}
+		myself:=api.Group("myself")
+		{
+			myself.GET("/:email",GetMyTeam)
 		}
 	}
 }

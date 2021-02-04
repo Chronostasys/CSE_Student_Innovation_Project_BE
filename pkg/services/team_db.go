@@ -42,3 +42,7 @@ func GetTeamByID(teamID uint)(team models.Team,err error){
 	err=db.Where("ID =?", teamID).Find(&team).Error
 	return
 }
+func GetTeamsByEmail(ownerEmail string)(teams []models.Team){
+	db.Where("Owner_email=?",ownerEmail).Find(&teams)
+	return
+}

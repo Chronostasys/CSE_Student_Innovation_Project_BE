@@ -105,7 +105,7 @@ func GetTeamsList(context *gin.Context){
 	return
 }
 func GetTeam(context *gin.Context){
-	teamId,_ := strconv.Atoi(context.Param("hole_id"))
+	teamId,_ := strconv.Atoi(context.Param("team_id"))
 	team,err:=services.GetTeamByID(uint(teamId))
 	if err!=nil{
 		context.JSON(http.StatusBadRequest, gin.H{
@@ -123,4 +123,19 @@ func GetTeam(context *gin.Context){
 	context.JSON(http.StatusOK, result)
 	return
 
+}
+func GetMyTeam(context *gin.Context){
+	email:=context.Param("email")
+	teams := services.GetTeamsByEmail(email)
+	results := []map[string]interface{}{}
+	for _, value := range teams {
+		results = append(results, map[string]interface{}{
+			"TeamName" :          value.Name,
+			"Description":        value.Description,
+			"Mile_Stone":		  value.Mile_Stone,
+		})
+
+	}
+	context.JSON(http.StatusOK, results)
+	return
 }
