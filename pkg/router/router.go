@@ -8,6 +8,15 @@ import (
 func InitRouter(r *gin.Engine) {
 	api := r.Group("/api")
 	{
+		user := api.Group("/auth")
+		{
+			user.POST("/isSessionExpired", ATrouter.IsTokenExpired)
+			user.POST("/sendVerifyCode", ATrouter.SendVerifyCode)
+			user.POST("/login", ATrouter.Login)
+			user.POST("/changePassword", ATrouter.ForgetPassword)
+			user.POST("/verifyCodeMatch", ATrouter.IsVerifyCodeMatch)
+			user.POST("/signup", ATrouter.Signup)
+		}
 		auth := api.Group("auth")
 		{
 			auth.GET("/hello", ATrouter.Helloworld)
