@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+	"fmt"
 )
 
 func AddBlog(context *gin.Context) {
@@ -68,9 +69,11 @@ func DeleteBlog(context *gin.Context){
 }
 
 func GetBlogs(context *gin.Context){
-	page,_:=strconv.Atoi(context.Param("page"))
-	list_size,_:=strconv.Atoi( context.Param("blog_num"))
+	page,_:=strconv.Atoi(context.Query("page"))
+	list_size,_:=strconv.Atoi( context.Query("blog_num"))
+	fmt.Println(page,list_size)
 	blogs:=services.GetBlogs(page,list_size,true)
+	fmt.Println(blogs)
 	results:=[]map[string]interface{}{}
 	for _,temp:=range blogs{
 		results=append(results,map[string]interface{}{
