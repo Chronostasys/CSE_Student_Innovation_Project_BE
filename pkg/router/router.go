@@ -1,6 +1,7 @@
 package router
 
 import (
+	"github.com/Pivot-Studio/Authorization-Template/ATmiddleware"
 	"github.com/Pivot-Studio/Authorization-Template/pkg/ATrouter"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/cors"
@@ -23,28 +24,31 @@ func InitRouter(r *gin.Engine) {
 		blog := api.Group("/blog")
 		{
 			blog.Use(cors.Default())
-			blog.POST("/add", AddBlog)
-			blog.DELETE("/delete", DeleteBlog)
-			blog.GET("/get",GetBlogs)
+			blog.GET("/:blog_id",GetBlog)
+			blog.GET("",GetBlogs)
+			blog.GET("/getBlogNumber",GetBlgsNumber)
+			blog.Use(ATmiddleware.Auth())
+			blog.POST("", AddBlog)
+			blog.DELETE("", DeleteBlog)
 		}
-		team := api.Group("team")
-		{
-			team.Use(cors.Default())
-			team.GET("",GetTeamsList)
-			team.GET("/:team_id",GetTeam)
-			team.POST("", CreatTeam)
-			team.DELETE("", DeleteTeam)
-			team.PUT("", ChangeDetailOfTeam)
-		}
-		inviting := api.Group("inviting")
-		{
-			inviting.GET("")
-			inviting.POST("/invite",InviteTeamMember)
-			inviting.POST("/accept",AcceptInvite)
-		}
-		myself:=api.Group("myself")
-		{
-			myself.GET("/:email",GetMyTeam)
-		}
+		//team := api.Group("team")
+		//{
+		//	team.Use(cors.Default())
+		//	team.GET("",GetTeamsList)
+		//	team.GET("/:team_id",GetTeam)
+		//	team.POST("", CreatTeam)
+		//	team.DELETE("", DeleteTeam)
+		//	team.PUT("", ChangeDetailOfTeam)
+		//}
+		//inviting := api.Group("inviting")
+		//{
+		//	inviting.GET("")
+		//	inviting.POST("/invite",InviteTeamMember)
+		//	inviting.POST("/accept",AcceptInvite)
+		//}
+		//myself:=api.Group("myself")
+		//{
+		//	myself.GET("/:email",GetMyTeam)
+		//}
 	}
 }

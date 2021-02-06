@@ -27,11 +27,20 @@ func DeleteBlog(blog_id uint,auth_email string)(isDeleted bool,err error){
 	return true,nil
 }
 
-func GetBlogs(team_id uint,start_id int,list_size int,is_descend bool)(blogs []models.Blog){
+func GetBlogs(page int,list_size int,is_descend bool)(blogs []models.Blog){
 	if is_descend {
-		db.Offset(start_id-1).Limit(list_size).Order("created_at desc").Where("team_id=?", team_id).Find(&blogs)
+		db.Offset(page*list_size).Limit(list_size).Order("created_at desc").Find(&blogs)
 	} else {
-		db.Offset(start_id-1).Limit(list_size).Where("team_id=?", team_id).Find(&blogs)
+		db.Offset(page*list_size).Limit(list_size).Find(&blogs)
 	}
 	return blogs
+}
+func GetBlogsNumber()(number int){
+	var blog models.Blog
+	db.Model(&blog).Count(&number)
+	return number
+}
+func GetOneBlog(blog_id int)(blog models.Blog,err error){
+	err=db.Where("id=?",blog_id).Find(blog_id).Error
+	return
 }
