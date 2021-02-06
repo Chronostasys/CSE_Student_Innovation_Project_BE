@@ -3,8 +3,9 @@ module github.com/Pivot-Studio/CSE_Student_Innovation_Project
 go 1.15
 
 require (
-	github.com/Pivot-Studio/Authorization-Template v0.0.0-20201227124152-90455201a795
+	github.com/Pivot-Studio/Authorization-Template v0.0.0-20201227164557-574c6f21f521
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-playground/validator/v10 v10.4.1 // indirect
 	github.com/golang/protobuf v1.4.3 // indirect
