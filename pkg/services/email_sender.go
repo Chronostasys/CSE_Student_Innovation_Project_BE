@@ -1,26 +1,77 @@
 package services
 
-import "gopkg.in/gomail.v2"
+import (
+	"bytes"
+	"fmt"
+	"html/template"
+	"log"
+	"net/mail"
+	"strings"
+)
 
-func InviteMemberToTeam(email_from string,team_id int,description string,email_to string){
-	m := gomail.NewMessage()
-	// 发邮件的地址
-	m.SetHeader("From", "shenboyu2020@163.com")
-	// 给谁发送，支持多个账号
-	m.SetHeader("To", email_to)
-	// 抄送谁
-	//m.SetAddressHeader("Cc", "dan@example.com", "Dan")
-	// 邮件标题
-	m.SetHeader("Subject", "您正被邀请加入团队")
-	// 邮件正文，支持 html
-	//这里等着前端给我写html啦
-	m.SetBody("text/html", "blabla")
-	// 附件
-	//m.Attach("/home/Alex/lolcat.jpg")
-	// stmp服务，端口号，发送邮件账号，发送账号密码
-	d := gomail.NewDialer("smtp.163.com", 25, "shenboyu2020@163.com", "WOEVMSPVCYASVDNS")
-	// Send the email to Bob, Cora and Dan.
-	if err := d.DialAndSend(m); err != nil {
-		panic(err)
+func SendEmail(toEmail string, verifyCode string) (isfinished bool) {
+	defer func() {
+		if err := recover(); err != nil {
+			emailInit()
+			isfinished = false
+		}
+	}()
+	emailInit()
+	from := mail.Address{"1037树洞团队", account}
+	to := mail.Address{"亲爱的用户", toEmail}
+	var err error
+	if err = client.Mail(from.Address); err != nil {
+		log.Panic(err)
 	}
+
+	if err = client.Rcpt(to.Address); err != nil {
+		log.Panic(err)
+	}
+
+	subj := "HustHole注册"
+
+	//===================================
+	//Send a email template
+	t, err := template.ParseFiles("hust-mail.html")
+	if err != nil {
+		log.Panic(err)
+	}
+	buffer := new(bytes.Buffer)
+	var data interface{}
+	if err = t.Execute(buffer, data); err != nil {
+		log.Panic(err)
+	}
+
+	//------------------------------------
+	// Setup headers
+	headers := make(map[string]string)
+	headers["From"] = from.String()
+	headers["To"] = to.String()
+	headers["Subject"] = subj
+
+	// Setup message
+	message := ""
+	for k, v := range headers {
+		message += fmt.Sprintf("%s: %s\r\n", k, v)
+	}
+	con := strings.Replace(buffer.String(), "VerifyCodePlace", verifyCode, 1)
+	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
+	message += mime + con
+
+	w, err := client.Data()
+	if err != nil {
+		log.Panic(err)
+	}
+	_, err = w.Write([]byte(message))
+
+	if err != nil {
+		log.Panic(err)
+	}
+	err = w.Close()
+	if err != nil {
+		log.Panic(err)
+	}
+	client.Quit()
+	return true
 }
+

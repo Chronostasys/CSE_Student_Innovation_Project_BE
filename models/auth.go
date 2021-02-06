@@ -1,5 +1,4 @@
 package models
-
 type AuthUser struct {
 	Email                string `gorm:"primary_key"`
 	Username             string
@@ -11,3 +10,4 @@ type AuthUser struct {
 	Last_login_ip        string
 	Role                 string
 }
+

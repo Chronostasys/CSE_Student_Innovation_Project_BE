@@ -1,6 +1,7 @@
 package router
 
 import (
+	"github.com/Pivot-Studio/CSE_Student_Innovation_Project/models"
 	"github.com/Pivot-Studio/CSE_Student_Innovation_Project/pkg/services"
 	"github.com/Pivot-Studio/CSE_Student_Innovation_Project/pkg/util"
 	"github.com/gin-gonic/gin"
@@ -11,27 +12,34 @@ import (
 func AddBlog(context *gin.Context) {
 	title:=context.PostForm("title")
 	content:=context.PostForm("content")
+	/*teamId,_:=strconv.Atoi(context.PostForm("team_id"))
+	team_id:=uint(teamId)*/
 	auth_email,_:=util.GetEmailFromCookie(context)
-	teamMember:=services.GetTeamMemberFromEmail(auth_email)
-	if teamMember.ID<0{
+	/*teamMember:=services.GetTeamMemberFromEmail(auth_email)
+	if teamMember.ID!=team_id{
 		context.JSON(http.StatusBadRequest,gin.H{
-			"msg":"请先加入队伍",
+			"msg":"不在指定队伍中，无法发布",
 		})
 		return
-	}
-	if title==""{
-		context.JSON(http.StatusBadRequest,gin.H{
-			"msg":"请输入标题",
-		})
-		return
-	}
-	if content==""{
+	}*/
+	if content==""||title==""{
 		context.JSON(http.StatusBadRequest,gin.H{
 			"msg":"请输入内容",
 		})
 		return
 	}
-	_=services.AddBlog(auth_email,title,content,teamMember.Team_Id)
+	blog:=models.Blog{
+		//Team_Id: team_id,
+		Auth_Email: auth_email,
+		Title: title,
+		Content: content,
+	}
+	err:=services.AddBlog(blog)
+	if err!=nil{
+		context.JSON(http.StatusInternalServerError,gin.H{
+			"msg":"发布文章失败",
+		})
+	}
 	context.JSON(http.StatusOK,gin.H{
 			"msg":"发布文章成功",
 	})
@@ -39,9 +47,9 @@ func AddBlog(context *gin.Context) {
 
 //只能删除自己发布的文章
 func DeleteBlog(context *gin.Context){
-	id,_:=strconv.Atoi(context.PostForm("id"))
+	blog_id,_:=strconv.Atoi(context.PostForm("blog_id"))
 	auth_email,_:=util.GetEmailFromCookie(context)
-	isDeleted,err:=services.DeleteBlog(id,auth_email)
+	isDeleted,err:=services.DeleteBlog(uint(blog_id),auth_email)
 	if isDeleted==false&&err==nil{
 		context.JSON(http.StatusBadRequest,gin.H{
 			"msg":"无权限删除文章",
@@ -57,4 +65,58 @@ func DeleteBlog(context *gin.Context){
 	context.JSON(http.StatusOK,gin.H{
 		"msg":"删除成功",
 	})
+}
+
+func GetBlogs(context *gin.Context){
+	//team_id,_:=strconv.Atoi(context.PostForm("team_id"))
+	page,_:=strconv.Atoi(context.PostForm("page"))
+	list_size,_:=strconv.Atoi( context.PostForm("list_size"))
+	//is_descend,_:=strconv.ParseBool(context.PostForm("is_descend"))
+	//teamMember:=services.GetTeamMemberFromEmail(auth_email)
+	//if teamMember.Team_Id!=uint(team_id){
+	//	context.JSON(http.StatusBadRequest,gin.H{
+	//		"msg":"不在队伍中，无法查看",
+	//	})
+	//	return
+	//}
+	//if start_id<0||list_size<0{
+	//	context.JSON(http.StatusBadRequest, gin.H{
+	//		"msg": "不合规的id或表长",
+	//	})
+	//	return
+	//}
+	blogs:=services.GetBlogs(page,list_size,true)
+	results:=[]map[string]interface{}{}
+	for _,temp:=range blogs{
+		results=append(results,map[string]interface{}{
+			"title":temp.Title,
+			"auth_email":temp.Auth_Email,
+			"content":temp.Content,
+		})
+	}
+	context.JSON(http.StatusOK,gin.H{
+		"msg":results,
+	})
+}
+
+func GetBlogsNumber(context *gin.Context){
+	context.JSON(http.StatusOK,gin.H{
+		"total_number":services.GetBlogsNumber(),
+	})
+}
+func GetBlog(context *gin.Context){
+	blog_id,_:=strconv.Atoi(context.Param("blog_id"))
+	blog,err:=services.GetOneBlog(blog_id)
+	if err!=nil{
+		context.JSON(404,gin.H{})
+	}else {
+		context.JSON(200,gin.H{
+			"blog_id":blog.ID,
+			"content":blog.Content,
+			"auther":blog.Auth_Email,
+			"title":blog.Title,
+			"publish_time":blog.CreatedAt,
+		})
+		return
+	}
 }
