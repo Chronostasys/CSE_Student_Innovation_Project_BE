@@ -15,7 +15,7 @@ func InitRouter(r *gin.Engine) {
 			user.POST("/login", ATrouter.Login)
 			user.POST("/changePassword", ATrouter.ForgetPassword)
 			user.POST("/verifyCodeMatch", ATrouter.IsVerifyCodeMatch)
-			user.POST("/signup", ATrouter.Signup)
+			user.POST("/signup", ATrouter.Register)
 		}
 		auth := api.Group("auth")
 		{
