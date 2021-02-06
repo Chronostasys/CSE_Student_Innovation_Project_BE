@@ -1,8 +1,6 @@
 package router
 
 import (
-	"github.com/Pivot-Studio/Authorization-Template/ATmiddleware"
-	"github.com/Pivot-Studio/Authorization-Template/pkg/ATrouter"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/cors"
 )
@@ -13,20 +11,21 @@ func InitRouter(r *gin.Engine) {
 		user := api.Group("/auth")
 		{
 			user.Use(cors.Default())
-			user.POST("/isSessionExpired", ATrouter.IsTokenExpired)
-			user.POST("/sendVerifyCode", ATrouter.SendVerifyCode)
-			user.POST("/login", ATrouter.Login)
-			user.POST("/changePassword", ATrouter.ForgetPassword)
-			user.POST("/verifyCodeMatch", ATrouter.IsVerifyCodeMatch)
-			user.GET("/hello", ATrouter.Helloworld)
-			user.POST("/signup", ATrouter.Register)
+			user.GET("/hello", Helloworld)
+			user.POST("/signup", Signup)
+			user.POST("/login", Login)
+			user.POST("/sendVerifyCode", SendVerifyCode)
+			user.POST("/changePassword_Email", ChangePasswordByEmail)
+			user.POST("/changePasswordVerify_code", ChangePasswordVerifyCode)
+			user.POST("/changePassword", ChangePassword)
+
 		}
 		blog := api.Group("/blog")
 		{
 			blog.Use(cors.Default())
-			blog.GET("/getBlogNumber",GetBlgsNumber)
+			blog.GET("/getBlogNumber",GetBlogsNumber)
 			blog.GET("",GetBlogs)
-			blog.Use(ATmiddleware.Auth())
+			blog.Use(Auth())
 			blog.POST("", AddBlog)
 			blog.DELETE("", DeleteBlog)
 		}

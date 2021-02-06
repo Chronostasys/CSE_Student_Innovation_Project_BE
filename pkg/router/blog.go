@@ -12,16 +12,16 @@ import (
 func AddBlog(context *gin.Context) {
 	title:=context.PostForm("title")
 	content:=context.PostForm("content")
-	teamId,_:=strconv.Atoi(context.PostForm("team_id"))
-	team_id:=uint(teamId)
+	/*teamId,_:=strconv.Atoi(context.PostForm("team_id"))
+	team_id:=uint(teamId)*/
 	auth_email,_:=util.GetEmailFromCookie(context)
-	teamMember:=services.GetTeamMemberFromEmail(auth_email)
+	/*teamMember:=services.GetTeamMemberFromEmail(auth_email)
 	if teamMember.ID!=team_id{
 		context.JSON(http.StatusBadRequest,gin.H{
 			"msg":"不在指定队伍中，无法发布",
 		})
 		return
-	}
+	}*/
 	if content==""||title==""{
 		context.JSON(http.StatusBadRequest,gin.H{
 			"msg":"请输入内容",
@@ -29,7 +29,7 @@ func AddBlog(context *gin.Context) {
 		return
 	}
 	blog:=models.Blog{
-		Team_Id: team_id,
+		//Team_Id: team_id,
 		Auth_Email: auth_email,
 		Title: title,
 		Content: content,
@@ -99,7 +99,9 @@ func GetBlogs(context *gin.Context){
 	})
 }
 
-func GetBlgsNumber(context *gin.Context){
+
+func GetBlogsNumber(context *gin.Context){
+
 	context.JSON(http.StatusOK,gin.H{
 		"total_number":services.GetBlogsNumber(),
 	})

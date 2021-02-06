@@ -2,10 +2,10 @@ package services
 
 import "github.com/Pivot-Studio/CSE_Student_Innovation_Project/models"
 
-func GetTeamMemberFromEmail(auth_email string)(teamMember models.TeamMember){
-	db.Where("email = ?",auth_email).First(&teamMember)
-	return teamMember
-}
+//func GetTeamMemberFromEmail(auth_email string)(teamMember models.TeamMember){
+//	db.Where("email = ?",auth_email).First(&teamMember)
+//	return teamMember
+//}
 
 func AddBlog(blog models.Blog)(err error){
 	err=db.Create(&blog).Error
