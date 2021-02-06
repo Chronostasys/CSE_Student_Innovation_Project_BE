@@ -24,9 +24,8 @@ func InitRouter(r *gin.Engine) {
 		blog := api.Group("/blog")
 		{
 			blog.Use(cors.Default())
-			blog.GET("/:blog_id",GetBlog)
-			blog.GET("",GetBlogs)
 			blog.GET("/getBlogNumber",GetBlgsNumber)
+			blog.GET("",GetBlogs)
 			blog.Use(ATmiddleware.Auth())
 			blog.POST("", AddBlog)
 			blog.DELETE("", DeleteBlog)

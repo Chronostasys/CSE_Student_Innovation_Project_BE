@@ -1,7 +1,7 @@
 {
   "DbSettings":{
     "Username": "root",
-    "Password": "PivotStudio@2020",
+    "Password": "root",
     "Hostname": "127.0.0.1",
     "Dbname":"InnovationProject1"
   },
