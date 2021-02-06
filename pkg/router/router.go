@@ -18,7 +18,6 @@ func InitRouter(r *gin.Engine) {
 			user.POST("/changePassword_Email", ChangePassword_Email)
 			user.POST("/changePasswordVerify_code", ChangePasswordVerify_code)
 			user.POST("/changePassword", ChangePassword)
-
 		}
 	}
 }

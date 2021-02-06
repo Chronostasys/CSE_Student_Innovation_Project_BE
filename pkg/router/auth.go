@@ -118,7 +118,7 @@ func ChangePasswordVerify_code(context *gin.Context){
 	email := strings.ToLower(context.PostForm("email"))
 	verifyStr := context.PostForm("verify_code")
 	if services.IsVerifyCodeMatchToRegisterAccount(verifyStr, email) {
-		services.RemoveVerifyFromRedis(email)
+		//services.RemoveVerifyFromRedis(email)
 		context.JSON(http.StatusOK, gin.H{
 			"msg":   "验证码正确",
 		})
@@ -138,6 +138,7 @@ func ChangePassword(context *gin.Context) {
 	if services.IsVerifyCodeMatchToRegisterAccount(verifyCode, email) {
 		passwordHash := util.HashWithSalt(newPassword)
 		err := services.ResetUserPassword(email, passwordHash)
+		services.RemoveVerifyFromRedis(email)
 		if err != nil {
 			context.JSON(http.StatusBadRequest, gin.H{
 				"msg": err.Error(),
