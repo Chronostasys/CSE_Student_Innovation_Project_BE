@@ -5,6 +5,7 @@ import (
 	"github.com/Pivot-Studio/CSE_Student_Innovation_Project/pkg/consts"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	"time"
 )
 
 func GetEmailFromCookie(c *gin.Context) (email string, err error) {
@@ -33,4 +34,9 @@ func GetClaimFromToken(tokenString string) (claims jwt.Claims, err error) {
 		claims = token.Claims.(jwt.MapClaims)
 		return claims, nil
 	}
+}
+func GetTimeStamp() (t int64) {
+	loc, _ := time.LoadLocation("Asia/Shanghai")
+	t = time.Now().In(loc).Unix()
+	return
 }
