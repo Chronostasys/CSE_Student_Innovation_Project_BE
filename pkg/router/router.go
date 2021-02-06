@@ -22,12 +22,14 @@ func InitRouter(r *gin.Engine) {
 		}
 		blog := api.Group("/blog")
 		{
+			blog.Use(cors.Default())
 			blog.POST("/add", AddBlog)
 			blog.DELETE("/delete", DeleteBlog)
 			blog.GET("/get",GetBlogs)
 		}
 		team := api.Group("team")
 		{
+			team.Use(cors.Default())
 			team.GET("",GetTeamsList)
 			team.GET("/:team_id",GetTeam)
 			team.POST("", CreatTeam)
