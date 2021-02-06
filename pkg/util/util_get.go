@@ -8,18 +8,14 @@ import (
 	"time"
 )
 
-func GetEmailFromCookie(c *gin.Context) (email string, err error) {
+func GetEmailFromToken(c *gin.Context) (email string, err error) {
 	defer func() {
 		if e := recover(); e != nil {
 			err = errors.New("您未登录，请登陆后查看")
 		}
 	}()
-	cookie, err := c.Cookie(consts.COOKIE_NAME)
-	if err != nil {
-		err = errors.New("您未登录，请登陆后查看")
-		return
-	}
-	claim, _ := GetClaimFromToken(cookie)
+	tokenStr :=c.GetHeader("token")
+	claim, _ := GetClaimFromToken(tokenStr)
 	email = claim.(jwt.MapClaims)["email"].(string)
 	return
 }

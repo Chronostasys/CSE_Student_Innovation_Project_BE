@@ -14,7 +14,7 @@ func AddBlog(context *gin.Context) {
 	content:=context.PostForm("content")
 	/*teamId,_:=strconv.Atoi(context.PostForm("team_id"))
 	team_id:=uint(teamId)*/
-	auth_email,_:=util.GetEmailFromCookie(context)
+	auth_email,_:=util.GetEmailFromToken(context)
 	/*teamMember:=services.GetTeamMemberFromEmail(auth_email)
 	if teamMember.ID!=team_id{
 		context.JSON(http.StatusBadRequest,gin.H{
@@ -48,7 +48,7 @@ func AddBlog(context *gin.Context) {
 //只能删除自己发布的文章
 func DeleteBlog(context *gin.Context){
 	blog_id,_:=strconv.Atoi(context.PostForm("blog_id"))
-	auth_email,_:=util.GetEmailFromCookie(context)
+	auth_email,_:=util.GetEmailFromToken(context)
 	isDeleted,err:=services.DeleteBlog(uint(blog_id),auth_email)
 	if isDeleted==false&&err==nil{
 		context.JSON(http.StatusBadRequest,gin.H{

@@ -17,8 +17,6 @@ func Helloworld(g *gin.Context) {
 		"msg":  "helloworld",
 	})
 	return
-
-
 }
 func Signup(context *gin.Context) {
 	email := strings.ToLower(context.PostForm("email"))
@@ -41,7 +39,7 @@ func Signup(context *gin.Context) {
 			Email: email, Password: passwordhash,Username: name,
 			Register_timestamp: util.GetTimeStamp(), Is_email_activated: true,
 			Role: consts.USER}
-		services.AddUserWithoutCheck(user)
+		services.CreateUser(user)
 		token, _ := util.GenerateToken(email, consts.USER)
 		context.SetCookie(consts.COOKIE_NAME, token, consts.EXPIRE_TIME_TOKEN, "/", "localhost", false, true)
 		context.JSON(http.StatusOK, gin.H{
@@ -190,4 +188,13 @@ func Auth() gin.HandlerFunc {
 			return
 		}
 	}
+}
+func GetMyselfInfo(context *gin.Context){
+	email,_:=util.GetEmailFromToken(context)
+	user,_:=services.GetUserByEmail(email)
+	context.JSON(http.StatusOK,gin.H{
+		"name":user.Username,
+		"email":user.Email,
+	})
+	return
 }
