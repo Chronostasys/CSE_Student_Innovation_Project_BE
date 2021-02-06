@@ -6,6 +6,13 @@ import (
 )
 
 func InitRouter(r *gin.Engine) {
+	config:=cors.Config{
+	    AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"},
+	    AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type","access-control-allow-origin","token"},
+	    AllowCredentials: false,
+	}
+	config.AllowAllOrigins=true
+	r.Use(cors.New(config))
 	api := r.Group("/api")
 	{
 		user := api.Group("/auth")
@@ -26,6 +33,7 @@ func InitRouter(r *gin.Engine) {
 			blog.GET("/getBlogNumber",GetBlogsNumber)
 			blog.GET("",GetBlogs)
 			blog.Use(Auth())
+			blog.Use(cors.Default())
 			blog.POST("", AddBlog)
 			blog.DELETE("", DeleteBlog)
 		}
