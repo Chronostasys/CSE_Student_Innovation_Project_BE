@@ -19,5 +19,14 @@ func InitRouter(r *gin.Engine) {
 			user.POST("/changePasswordVerify_code", ChangePasswordVerify_code)
 			user.POST("/changePassword", ChangePassword)
 		}
+		blog := api.Group("/blog")
+		{
+			blog.Use(cors.Default())
+			blog.GET("/getBlogNumber",GetBlogsNumber)
+			blog.GET("",GetBlogs)
+			blog.Use(Auth())
+			blog.POST("", AddBlog)
+			blog.DELETE("", DeleteBlog)
+		}
 	}
 }
