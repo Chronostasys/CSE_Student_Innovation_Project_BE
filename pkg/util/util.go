@@ -9,6 +9,7 @@ import (
 	"log"
 	"os"
 	"reflect"
+	"time"
 )
 var aes_key string
 
@@ -42,3 +43,10 @@ func CreateTableIfNotExist(db *gorm.DB, tableModels []interface{}) {
 	}
 }
 
+func ConvertShanghaiTimeZone(t time.Time)(time.Time,error){
+	loc, err := time.LoadLocation("Asia/Shanghai")
+	if err == nil {
+		t = t.In(loc)
+	}
+	return t,err
+}

@@ -1,13 +1,13 @@
 package router
 
 import (
+	"fmt"
 	"github.com/Pivot-Studio/CSE_Student_Innovation_Project/models"
 	"github.com/Pivot-Studio/CSE_Student_Innovation_Project/pkg/services"
 	"github.com/Pivot-Studio/CSE_Student_Innovation_Project/pkg/util"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
-	"fmt"
 )
 
 func AddBlog(context *gin.Context) {
@@ -71,13 +71,14 @@ func GetBlogs(context *gin.Context){
 	results:=[]map[string]interface{}{}
 	for _,temp:=range blogs{
 		user,_:=services.GetUserByEmail(temp.Auth_Email)
+		time,_:=util.ConvertShanghaiTimeZone(temp.CreatedAt)
 		results=append(results,map[string]interface{}{
 			"blog_id":temp.ID,
 			"title":temp.Title,
 			"content":temp.Content,
 			"auth_email":temp.Auth_Email,
 			"author_name":user.Username,
-			"publish_time":temp.CreatedAt,
+			"publish_time":time.String(),
 		})
 	}
 	context.JSON(http.StatusOK,gin.H{
@@ -99,14 +100,17 @@ func GetBlog(context *gin.Context){
 		context.JSON(404,gin.H{`err`:err.Error()})
 	}else {
 		user,_:=services.GetUserByEmail(blog.Auth_Email)
+		time,_:=util.ConvertShanghaiTimeZone(blog.CreatedAt)
 		context.JSON(200,gin.H{
 			"blog_id":      blog.ID,
 			"title":        blog.Title,
 			"content":      blog.Content,
 			"auth_email":   blog.Auth_Email,
 			"author_name":  user.Username,
-			"publish_time": blog.CreatedAt,
+			"publish_time": time.String(),
 		})
+
+
 		return
 	}
 }
