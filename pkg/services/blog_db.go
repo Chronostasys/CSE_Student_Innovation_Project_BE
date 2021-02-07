@@ -41,6 +41,6 @@ func GetBlogsNumber()(number int){
 	return number
 }
 func GetOneBlog(blog_id int)(blog models.Blog,err error){
-	err=db.Where("id=?",blog_id).Find(blog_id).Error
+	err=db.Where("id=?",blog_id).Find(&blog).Error
 	return
 }
