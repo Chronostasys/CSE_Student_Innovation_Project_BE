@@ -73,10 +73,14 @@ func GetBlogs(context *gin.Context){
 	blogs:=services.GetBlogs(page,list_size,true)
 	results:=[]map[string]interface{}{}
 	for _,temp:=range blogs{
+		user,_:=services.GetUserByEmail(temp.Auth_Email)
 		results=append(results,map[string]interface{}{
+			"blog_id":temp.ID,
 			"title":temp.Title,
-			"auth_email":temp.Auth_Email,
 			"content":temp.Content,
+			"auth_email":temp.Auth_Email,
+			"author_name":user.Username,
+			"publish_time":temp.CreatedAt,
 		})
 	}
 	context.JSON(http.StatusOK,gin.H{
