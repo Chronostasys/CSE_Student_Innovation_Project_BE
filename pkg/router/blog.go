@@ -13,16 +13,7 @@ import (
 func AddBlog(context *gin.Context) {
 	title:=context.PostForm("title")
 	content:=context.PostForm("content")
-	/*teamId,_:=strconv.Atoi(context.PostForm("team_id"))
-	team_id:=uint(teamId)*/
 	auth_email,_:=util.GetEmailFromToken(context)
-	/*teamMember:=services.GetTeamMemberFromEmail(auth_email)
-	if teamMember.ID!=team_id{
-		context.JSON(http.StatusBadRequest,gin.H{
-			"msg":"不在指定队伍中，无法发布",
-		})
-		return
-	}*/
 	if content==""||title==""{
 		context.JSON(http.StatusBadRequest,gin.H{
 			"msg":"请输入内容",
@@ -35,15 +26,17 @@ func AddBlog(context *gin.Context) {
 		Title: title,
 		Content: content,
 	}
-	err:=services.AddBlog(blog)
+	err:=services.AddBlog(&blog)
 	if err!=nil{
 		context.JSON(http.StatusInternalServerError,gin.H{
 			"msg":"发布文章失败",
 		})
+		return
 	}
 	context.JSON(http.StatusOK,gin.H{
-			"msg":"发布文章成功",
+			"blog_id":blog.ID,
 	})
+	return
 }
 
 //只能删除自己发布的文章
@@ -66,6 +59,7 @@ func DeleteBlog(context *gin.Context){
 	context.JSON(http.StatusOK,gin.H{
 		"msg":"删除成功",
 	})
+	return
 }
 
 func GetBlogs(context *gin.Context){
