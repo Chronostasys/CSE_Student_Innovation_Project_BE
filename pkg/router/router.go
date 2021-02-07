@@ -33,6 +33,7 @@ func InitRouter(r *gin.Engine) {
 			blog.Use(cors.Default())
 			blog.GET("/getBlogNumber",GetBlogsNumber)
 			blog.GET("",GetBlogs)
+			blog.GET("/detail/:blog_id",GetBlog)
 			blog.Use(Auth())
 			blog.Use(cors.Default())
 			blog.POST("", AddBlog)

@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+	"fmt"
 )
 
 func AddBlog(context *gin.Context) {
@@ -68,15 +69,21 @@ func DeleteBlog(context *gin.Context){
 }
 
 func GetBlogs(context *gin.Context){
-	page,_:=strconv.Atoi(context.Param("page"))
-	list_size,_:=strconv.Atoi( context.Param("blog_num"))
+	page,_:=strconv.Atoi(context.Query("page"))
+	list_size,_:=strconv.Atoi( context.Query("blog_num"))
+	fmt.Println(page,list_size)
 	blogs:=services.GetBlogs(page,list_size,true)
+	fmt.Println(blogs)
 	results:=[]map[string]interface{}{}
 	for _,temp:=range blogs{
+		user,_:=services.GetUserByEmail(temp.Auth_Email)
 		results=append(results,map[string]interface{}{
+			"blog_id":temp.ID,
 			"title":temp.Title,
-			"auth_email":temp.Auth_Email,
 			"content":temp.Content,
+			"auth_email":temp.Auth_Email,
+			"author_name":user.Username,
+			"publish_time":temp.CreatedAt,
 		})
 	}
 	context.JSON(http.StatusOK,gin.H{
@@ -95,14 +102,16 @@ func GetBlog(context *gin.Context){
 	blog_id,_:=strconv.Atoi(context.Param("blog_id"))
 	blog,err:=services.GetOneBlog(blog_id)
 	if err!=nil{
-		context.JSON(404,gin.H{})
+		context.JSON(404,gin.H{`err`:err.Error()})
 	}else {
+		user,_:=services.GetUserByEmail(blog.Auth_Email)
 		context.JSON(200,gin.H{
-			"blog_id":blog.ID,
-			"content":blog.Content,
-			"auther":blog.Auth_Email,
-			"title":blog.Title,
-			"publish_time":blog.CreatedAt,
+			"blog_id":      blog.ID,
+			"title":        blog.Title,
+			"content":      blog.Content,
+			"auth_email":   blog.Auth_Email,
+			"author_name":  user.Username,
+			"publish_time": blog.CreatedAt,
 		})
 		return
 	}
