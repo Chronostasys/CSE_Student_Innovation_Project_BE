@@ -102,14 +102,16 @@ func GetBlog(context *gin.Context){
 	blog_id,_:=strconv.Atoi(context.Param("blog_id"))
 	blog,err:=services.GetOneBlog(blog_id)
 	if err!=nil{
-		context.JSON(404,gin.H{})
+		context.JSON(404,gin.H{`err`:err.Error()})
 	}else {
+		user,_:=services.GetUserByEmail(blog.Auth_Email)
 		context.JSON(200,gin.H{
-			"blog_id":blog.ID,
-			"content":blog.Content,
-			"auther":blog.Auth_Email,
-			"title":blog.Title,
-			"publish_time":blog.CreatedAt,
+			"blog_id":      blog.ID,
+			"title":        blog.Title,
+			"content":      blog.Content,
+			"auth_email":   blog.Auth_Email,
+			"author_name":  user.Username,
+			"publish_time": blog.CreatedAt,
 		})
 		return
 	}
