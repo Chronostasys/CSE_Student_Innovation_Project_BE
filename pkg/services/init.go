@@ -57,16 +57,17 @@ func databaseInit() {
 
 	var temp []interface{}
 	var holeUserType models.AuthUser
-	temp = append(temp, &holeUserType)
+	var blogType models.Blog
+	temp = append(temp, &holeUserType,&blogType)
 	util.CreateTableIfNotExist(db, temp)
 
-	passwordhash := util.HashWithSalt("root")
+	passwordHash := util.HashWithSalt("root")
 	var u models.AuthUser
 	db.Where("email=?", "root").Find(&u)
 	if (u == models.AuthUser{}) {
 		user := models.AuthUser{
-			Email: "root", Password: passwordhash,
-			Register_timestamp: util.GetTimeStamp(), Is_email_activated: true,
+			Email: "root", Password: passwordHash,
+			RegisterTimestamp: util.GetTimeStamp(),
 			Role: consts.ROOT}
 		db.Create(user)
 	}

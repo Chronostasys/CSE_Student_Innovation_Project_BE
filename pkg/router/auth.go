@@ -11,22 +11,21 @@ import (
 	"strings"
 )
 
-func Helloworld(g *gin.Context) {
+
+func HelloWorld(g *gin.Context) {
 	g.JSON(http.StatusOK, gin.H{
 		"code": 200,
-		"msg":  "helloworld",
+		"msg":  "HelloWorld",
 	})
 	return
-
-
 }
 func Signup(context *gin.Context) {
 	email := strings.ToLower(context.PostForm("email"))
-	rsa_password := context.PostForm("password")
+	rsaPassword := context.PostForm("password")
 	verifyStr := context.PostForm("verify_code")
 	name :=context.PostForm("name")
 	//password in request is encrypted by rsa,so I should decrypt it first
-	password := rsa_password
+	password := rsaPassword
 
 	if services.IsEmailRegistered(email) {
 		context.JSON(http.StatusBadRequest, gin.H{
@@ -36,12 +35,12 @@ func Signup(context *gin.Context) {
 	}
 	if services.IsVerifyCodeMatchToRegisterAccount(verifyStr, email) {
 		services.RemoveVerifyFromRedis(email)
-		passwordhash := util.HashWithSalt(password)
+		passwordHash := util.HashWithSalt(password)
 		user := models.AuthUser{
-			Email: email, Password: passwordhash,Username: name,
-			Register_timestamp: util.GetTimeStamp(), Is_email_activated: true,
+			Email: email, Password: passwordHash,Username: name,
+			RegisterTimestamp: util.GetTimeStamp(),
 			Role: consts.USER}
-		services.AddUserWithoutCheck(user)
+		services.CreateUser(user)
 		token, _ := util.GenerateToken(email, consts.USER)
 		context.SetCookie(consts.COOKIE_NAME, token, consts.EXPIRE_TIME_TOKEN, "/", "localhost", false, true)
 		context.JSON(http.StatusOK, gin.H{
@@ -70,11 +69,10 @@ func Login(context *gin.Context) {
 		})
 		return
 	}
-
-	if isMacth := services.IsEmailAndPasswordMatch(email, password); isMacth {
-		context.SetCookie(consts.COOKIE_NAME, token, 1000, "/", "localhost", false, true)
+	if isMatch := services.IsEmailAndPasswordMatch(email, password); isMatch {
 		context.JSON(http.StatusOK, gin.H{
-			"msg": "登陆成功!",
+			"token":token,
+
 		})
 		return
 	} else {
@@ -101,7 +99,7 @@ func SendVerifyCode(context *gin.Context) {
 		return
 	}
 }
-func ChangePassword_Email(context *gin.Context){
+func ChangePasswordByEmail(context *gin.Context){
 	email := strings.ToLower(context.PostForm("email"))
 	if !services.IsEmailRegistered(email) {
 		context.JSON(http.StatusBadRequest, gin.H{
@@ -115,7 +113,7 @@ func ChangePassword_Email(context *gin.Context){
 		return
 	}
 }
-func ChangePasswordVerify_code(context *gin.Context){
+func ChangePasswordVerifyCode(context *gin.Context){
 	email := strings.ToLower(context.PostForm("email"))
 	verifyStr := context.PostForm("verify_code")
 	if services.IsVerifyCodeMatchToRegisterAccount(verifyStr, email) {
@@ -160,15 +158,8 @@ func ChangePassword(context *gin.Context) {
 }
 func Auth() gin.HandlerFunc {
 	return func(context *gin.Context) {
-		tokenString, err := context.Request.Cookie(consts.COOKIE_NAME)
-		if err != nil {
-			context.Abort()
-			context.JSON(http.StatusUnauthorized, gin.H{
-				"msg": "未认证，请先登录",
-			})
-			return
-		}
-		claim, err := util.GetClaimFromToken(tokenString.Value)
+		tokenString:= context.GetHeader("token")
+		claim, err := util.GetClaimFromToken(tokenString)
 		if err != nil {
 			context.Abort()
 			context.JSON(http.StatusUnauthorized, gin.H{
@@ -198,4 +189,13 @@ func Auth() gin.HandlerFunc {
 			return
 		}
 	}
+}
+func GetMyselfInfo(context *gin.Context){
+	email,_:=util.GetEmailFromToken(context)
+	user,_:=services.GetUserByEmail(email)
+	context.JSON(http.StatusOK,gin.H{
+		"name":user.Username,
+		"email":user.Email,
+	})
+	return
 }

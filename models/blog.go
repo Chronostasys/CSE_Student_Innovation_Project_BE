@@ -1,12 +1,15 @@
 package models
 
-import "github.com/jinzhu/gorm"
+import (
+	"time"
+)
 
 type Blog struct{
-
-	gorm.Model
-	//Team_Id    uint
-	Auth_Email string
-	Title      string
-	Content    string
+	ID                uint `gorm:"primary_key"`
+	PublishTimestamp  time.Time
+	AuthEmail   	  string
+	Title             string
+	Content           string  //文章内容
+	OrganizationType  string  //文章所属组织类型，可以为企业(enterprise)或项目(project)
+	OrganizationID    uint
 }

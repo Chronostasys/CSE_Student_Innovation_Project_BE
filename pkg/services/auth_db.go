@@ -17,7 +17,7 @@ func IsEmailRegistered(encrypted_email string) (IsRegistered bool) {
 	}
 	return IsRegistered
 }
-func AddUserWithoutCheck(holeuser models.AuthUser) {
+func CreateUser(holeuser models.AuthUser) {
 	db.Create(&holeuser)
 }
 func GetRoleWhileLogin(email_aes string) (role string) {
@@ -46,4 +46,8 @@ func ResetUserPassword(email string, passwordHash string) (err error) {
 	doc.Password = passwordHash
 	db.Save(&doc)
 	return nil
+}
+func GetUserByEmail(email string)(user models.AuthUser,err error){
+	err=db.Where("email=?",email).Find(&user).Error
+	return
 }
