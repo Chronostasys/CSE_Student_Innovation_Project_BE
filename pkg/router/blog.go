@@ -1,7 +1,6 @@
 package router
 
 import (
-	"fmt"
 	"github.com/Pivot-Studio/CSE_Student_Innovation_Project/models"
 	"github.com/Pivot-Studio/CSE_Student_Innovation_Project/pkg/services"
 	"github.com/Pivot-Studio/CSE_Student_Innovation_Project/pkg/util"
@@ -13,7 +12,7 @@ import (
 func AddBlog(context *gin.Context) {
 	title:=context.PostForm("title")
 	content:=context.PostForm("content")
-	auth_email,_:=util.GetEmailFromToken(context)
+	authEmail,_:=util.GetEmailFromToken(context)
 	if content==""||title==""{
 		context.JSON(http.StatusBadRequest,gin.H{
 			"msg":"请输入内容",
@@ -21,8 +20,7 @@ func AddBlog(context *gin.Context) {
 		return
 	}
 	blog:=models.Blog{
-		//Team_Id: team_id,
-		Auth_Email: auth_email,
+		AuthEmail: authEmail,
 		Title: title,
 		Content: content,
 	}
@@ -41,9 +39,9 @@ func AddBlog(context *gin.Context) {
 
 //只能删除自己发布的文章
 func DeleteBlog(context *gin.Context){
-	blog_id,_:=strconv.Atoi(context.PostForm("blog_id"))
-	auth_email,_:=util.GetEmailFromToken(context)
-	isDeleted,err:=services.DeleteBlog(uint(blog_id),auth_email)
+	blogId,_:=strconv.Atoi(context.PostForm("blogId"))
+	authEmail,_:=util.GetEmailFromToken(context)
+	isDeleted,err:=services.DeleteBlog(uint(blogId), authEmail)
 	if isDeleted==false&&err==nil{
 		context.JSON(http.StatusBadRequest,gin.H{
 			"msg":"无权限删除文章",
@@ -64,19 +62,17 @@ func DeleteBlog(context *gin.Context){
 
 func GetBlogs(context *gin.Context){
 	page,_:=strconv.Atoi(context.Query("page"))
-	list_size,_:=strconv.Atoi( context.Query("blog_num"))
-	fmt.Println(page,list_size)
-	blogs:=services.GetBlogs(page,list_size,true)
-	fmt.Println(blogs)
+	listSize,_:=strconv.Atoi( context.Query("blog_num"))
+	blogs:=services.GetBlogs(page,listSize,true)
 	results:=[]map[string]interface{}{}
 	for _,temp:=range blogs{
-		user,_:=services.GetUserByEmail(temp.Auth_Email)
-		time,_:=util.ConvertShanghaiTimeZone(temp.CreatedAt)
+		user,_:=services.GetUserByEmail(temp.AuthEmail)
+		time,_:=util.ConvertShanghaiTimeZone(temp.PublishTimestamp)
 		results=append(results,map[string]interface{}{
 			"blog_id":temp.ID,
 			"title":temp.Title,
 			"content":temp.Content,
-			"auth_email":temp.Auth_Email,
+			"auth_email":temp.AuthEmail,
 			"author_name":user.Username,
 			"publish_time":time.String(),
 		})
@@ -94,18 +90,18 @@ func GetBlogsNumber(context *gin.Context){
 	})
 }
 func GetBlog(context *gin.Context){
-	blog_id,_:=strconv.Atoi(context.Param("blog_id"))
-	blog,err:=services.GetOneBlog(blog_id)
+	blogId,_:=strconv.Atoi(context.Param("blogId"))
+	blog,err:=services.GetOneBlog(blogId)
 	if err!=nil{
 		context.JSON(404,gin.H{`err`:err.Error()})
 	}else {
-		user,_:=services.GetUserByEmail(blog.Auth_Email)
-		time,_:=util.ConvertShanghaiTimeZone(blog.CreatedAt)
+		user,_:=services.GetUserByEmail(blog.AuthEmail)
+		time,_:=util.ConvertShanghaiTimeZone(blog.PublishTimestamp)
 		context.JSON(200,gin.H{
 			"blog_id":      blog.ID,
 			"title":        blog.Title,
 			"content":      blog.Content,
-			"auth_email":   blog.Auth_Email,
+			"auth_email":   blog.AuthEmail,
 			"author_name":  user.Username,
 			"publish_time": time.String(),
 		})
