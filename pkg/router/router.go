@@ -39,5 +39,15 @@ func InitRouter(r *gin.Engine) {
 			blog.POST("", AddBlog)
 			blog.DELETE("", DeleteBlog)
 		}
+		enterprise := api.Group("/enterprise")
+		{
+			enterprise.GET("/enterpriseList", )
+			enterprise.GET("/enterpriseDetail", )
+		}
+		project := api.Group("/project")
+		{
+			project.GET("/projectList", )
+			project.GET("/projectDetail", )
+		}
 	}
 }
