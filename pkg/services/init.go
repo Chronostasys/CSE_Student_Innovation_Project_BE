@@ -58,7 +58,11 @@ func databaseInit() {
 	var temp []interface{}
 	var holeUserType models.AuthUser
 	var blogType models.Blog
-	temp = append(temp, &holeUserType,&blogType)
+	var commentType models.Comment
+	var enterpraiseType models.Enterprise
+	var projectType models.Project
+	var organizationType models.OrganizationToUser
+	temp = append(temp, &holeUserType,&blogType,&commentType,&projectType,&organizationType,&enterpraiseType)
 	util.CreateTableIfNotExist(db, temp)
 
 	passwordHash := util.HashWithSalt("root")

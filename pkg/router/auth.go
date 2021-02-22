@@ -199,3 +199,33 @@ func GetMyselfInfo(context *gin.Context){
 	})
 	return
 }
+func GetEnterprisesOfUser(context *gin.Context){
+	email,_:=util.GetEmailFromToken(context)
+	enterprises:=services.GetEnterprises(email)
+	results:=[]map[string]interface{}{}
+	for _,temp:=range enterprises{
+		results=append(results,map[string]interface{}{
+			"enterprise_name":temp.Name,
+			"enterprise_id":temp.ID,
+		})
+	}
+	context.JSON(http.StatusOK,gin.H{
+		"msg":results,
+	})
+	return
+}
+func GetProjectsOfUser(context *gin.Context){
+	email,_:=util.GetEmailFromToken(context)
+	projects:=services.GetProjects(email)
+	results:=[]map[string]interface{}{}
+	for _,temp:=range projects{
+		results=append(results,map[string]interface{}{
+			"enterprise_name":temp.Name,
+			"enterprise_id":temp.ID,
+		})
+	}
+	context.JSON(http.StatusOK,gin.H{
+		"msg":results,
+	})
+	return
+}

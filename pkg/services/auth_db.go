@@ -51,3 +51,15 @@ func GetUserByEmail(email string)(user models.AuthUser,err error){
 	err=db.Where("email=?",email).Find(&user).Error
 	return
 }
+func GetEnterprises(email string)(enterprises []models.Enterprise){
+	var temp models.OrganizationToUser
+	db.Where("email=? AND OrganizationType=?", email,"enterprise").Find(&temp)
+	db.Where("ID=?",temp.OrganizationID).Find(&enterprises)
+	return
+}
+func GetProjects(email string)(projects []models.Project){
+	var temp models.OrganizationToUser
+	db.Where("email=? AND OrganizationType=?", email,"project").Find(&temp)
+	db.Where("ID=?",temp.OrganizationID).Find(&projects)
+	return
+}

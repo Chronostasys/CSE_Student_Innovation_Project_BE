@@ -27,6 +27,8 @@ func InitRouter(r *gin.Engine) {
 			user.POST("/changePassword", ChangePassword)
 			user.Use(Auth())
 			user.GET("/myself",GetMyselfInfo)
+			user.GET("/getEnterpriseOfUser",GetEnterprisesOfUser)
+			user.GET("/getProjectsOfUser",GetProjectsOfUser)
 		}
 		blog := api.Group("/blog")
 		{
