@@ -41,7 +41,7 @@ func InitRouter(r *gin.Engine) {
 		}
 		enterprise := api.Group("/enterprise")
 		{
-			enterprise.GET("/enterpriseList", )
+			enterprise.GET("/enterpriseList", GetEnterprises)
 			enterprise.GET("/enterpriseDetail", )
 		}
 		project := api.Group("/project")
