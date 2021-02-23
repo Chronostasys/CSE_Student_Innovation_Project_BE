@@ -41,7 +41,11 @@ func GetBlogsNumber()(number int){
 	db.Model(&blog).Count(&number)
 	return number
 }
-func GetOneBlog(blogId int)(blog models.Blog,err error){
-	err=db.Where("id=?", blogId).Find(&blog).Error
+func GetOneBlog(blogId uint)(blog models.Blog,err error){
+	err=db.Where("ID=?", blogId).Find(&blog).Error
+	return
+}
+func GetCommentOfBlog(blogId uint)(comments []models.Comment,err error){
+	err=db.Where("ID=?",blogId).Find(&comments).Error
 	return
 }

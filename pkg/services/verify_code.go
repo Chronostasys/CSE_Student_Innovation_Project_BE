@@ -1,15 +1,12 @@
 package services
 
 import (
-	"fmt"
-	"github.com/Pivot-Studio/Authorization-Template/pkg/ATconsts"
 	"github.com/Pivot-Studio/CSE_Student_Innovation_Project/pkg/consts"
 	"time"
 )
 
 func IsVerifyCodeMatchToRegisterAccount(verifyCode string, email string) (IsMatch bool) {
-	re := Redis_client.Get(consts.REDIS_VERIFY_CODE_SUFFIX + email)
-	fmt.Println("\n\n", re.Val())
+	re := RedisClient.Get(consts.REDIS_VERIFY_CODE_SUFFIX + email)
 	if re.Val() == verifyCode && re.Val() != "" {
 		IsMatch = true
 	} else {
@@ -18,8 +15,8 @@ func IsVerifyCodeMatchToRegisterAccount(verifyCode string, email string) (IsMatc
 	return
 }
 func RemoveVerifyFromRedis(email string) {
-	Redis_client.Del(consts.REDIS_VERIFY_CODE_SUFFIX + email)
+	RedisClient.Del(consts.REDIS_VERIFY_CODE_SUFFIX + email)
 }
 func StoreEmailAndVerifyCodeInRedis(verifyCode string, email string) {
-	Redis_client.Set(ATconsts.REDIS_VERIFY_CODE_SUFFIX+email, verifyCode, ATconsts.VERIFYCODE_VALID_TIME*time.Second)
+	RedisClient.Set(consts.REDIS_VERIFY_CODE_SUFFIX+email, verifyCode, consts.VERIFYCODE_VALID_TIME*time.Second)
 }

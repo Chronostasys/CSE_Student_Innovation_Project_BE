@@ -12,6 +12,9 @@ import (
 func AddBlog(context *gin.Context) {
 	title:=context.PostForm("title")
 	content:=context.PostForm("content")
+	organizationType:=context.PostForm("organization_type")
+	organizationID,_:=strconv.Atoi(context.PostForm("organization_id"))
+	organizationName:=context.PostForm("organization_name")
 	authEmail,_:=util.GetEmailFromToken(context)
 	if content==""||title==""{
 		context.JSON(http.StatusBadRequest,gin.H{
@@ -23,6 +26,9 @@ func AddBlog(context *gin.Context) {
 		AuthEmail: authEmail,
 		Title: title,
 		Content: content,
+		OrganizationType: organizationType,
+		OrganizationID: uint(organizationID),
+		OrganizationName: organizationName,
 	}
 	err:=services.AddBlog(&blog)
 	if err!=nil{
@@ -75,6 +81,9 @@ func GetBlogs(context *gin.Context){
 			"auth_email":temp.AuthEmail,
 			"author_name":user.Username,
 			"publish_time":time.String(),
+			"organization_type":temp.OrganizationType,
+			"organization_id":temp.OrganizationID,
+			"organization_name":temp.OrganizationName,
 		})
 	}
 	context.JSON(http.StatusOK,gin.H{
@@ -89,22 +98,76 @@ func GetBlogsNumber(context *gin.Context){
 }
 func GetBlog(context *gin.Context){
 	blogId,_:=strconv.Atoi(context.Param("blogId"))
-	blog,err:=services.GetOneBlog(blogId)
+	blog,err:=services.GetOneBlog(uint(blogId))
 	if err!=nil{
-		context.JSON(404,gin.H{`err`:err.Error()})
+		context.JSON(http.StatusNotFound,gin.H{`err`:err.Error()})
 	}else {
 		user,_:=services.GetUserByEmail(blog.AuthEmail)
-		time,_:=util.ConvertShanghaiTimeZone(blog.PublishTimestamp)
-		context.JSON(200,gin.H{
-			"blog_id":      blog.ID,
-			"title":        blog.Title,
-			"content":      blog.Content,
-			"auth_email":   blog.AuthEmail,
-			"author_name":  user.Username,
-			"publish_time": time.String(),
+		context.JSON(http.StatusOK,gin.H{
+			"blog_id":      	blog.ID,
+			"title":        	blog.Title,
+			"content":      	blog.Content,
+			"auth_email":   	blog.AuthEmail,
+			"author_name":  	user.Username,
+			"publish_time": 	blog.PublishTimestamp.String(),
+			"organization_type":blog.OrganizationType,
+			"organization_name":blog.OrganizationName,
+			"organization_id":	blog.OrganizationID,
 		})
 
 
 		return
 	}
 }
+func GetCommentOfBlog(context *gin.Context){
+	blogId,_:=strconv.Atoi(context.Param("blogId"))
+	comments,err:=services.GetCommentOfBlog(uint(blogId))
+	if err!=nil{
+		context.JSON(http.StatusNotFound,gin.H{`err`:err.Error()})
+	}else {
+		results:=[]map[string]interface{}{}
+		for _,temp:=range comments{
+			results=append(results,map[string]interface{}{
+				"comment_content":temp.Content,
+				"comment_time":temp.PublishTimestamp,
+				"commenter_name":temp.AuthName,
+			})
+		}
+
+		context.JSON(http.StatusOK,gin.H{
+			"comments":results,
+		})
+	}
+}
+func AddComment(context *gin.Context){
+	blogId,_:=strconv.Atoi(context.PostForm("blog_id"))
+	content:=context.PostForm("comment_content")
+	authEmail,_:=util.GetEmailFromToken(context)
+	auth,_:=services.GetUserByEmail(authEmail)
+	if content==""{
+		context.JSON(http.StatusBadRequest,gin.H{
+			"msg":"请输入内容",
+		})
+		return
+	}
+	comment:=models.Comment{
+			BlogID: uint(blogId),
+			Content: content,
+			AuthEmail: auth.Email,
+			AuthName: auth.Username,
+	}
+	err:=services.AddComment(&comment)
+	if err!=nil{
+		context.JSON(http.StatusInternalServerError,gin.H{
+			"msg":"发布文章失败",
+		})
+		return
+	}
+	context.JSON(http.StatusOK,gin.H{
+		"comment_id":comment.ID,
+	})
+	return
+
+}
+
+

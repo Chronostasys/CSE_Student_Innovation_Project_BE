@@ -5,7 +5,6 @@ import "time"
 type Enterprise struct{
 	ID                uint `gorm:"primary_key"`
 	CreatTimestamp    time.Time
-	Address           string
 	Phone             string
 	Email             string
 	Name              string

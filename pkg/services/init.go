@@ -32,7 +32,7 @@ var password string
 var servername string
 
 //For Redis services
-var Redis_client *redis.Client
+var RedisClient *redis.Client
 
 func init() {
 	databaseInit()
@@ -118,7 +118,7 @@ func emailInit() {
 }
 func redisInit() {
 	redisSettings := util.ReadSettingsFromFile(consts.CONFIG_FILE_NAME).RedisSettings
-	Redis_client = redis.NewClient(&redis.Options{
+	RedisClient = redis.NewClient(&redis.Options{
 		Network:  "tcp",
 		Addr:     redisSettings.Address + ":" + redisSettings.Port,
 		Password: redisSettings.Password,

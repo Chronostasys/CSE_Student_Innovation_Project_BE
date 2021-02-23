@@ -12,4 +12,5 @@ type Blog struct{
 	Content           string  //文章内容
 	OrganizationType  string  //文章所属组织类型，可以为企业(enterprise)或项目(project)
 	OrganizationID    uint
+	OrganizationName  string
 }

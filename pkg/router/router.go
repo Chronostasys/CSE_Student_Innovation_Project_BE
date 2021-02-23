@@ -1,8 +1,8 @@
 package router
 
 import (
-	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 )
 
 func InitRouter(r *gin.Engine) {
@@ -36,9 +36,11 @@ func InitRouter(r *gin.Engine) {
 			blog.GET("/getBlogNumber",GetBlogsNumber)
 			blog.GET("",GetBlogs)
 			blog.GET("/detail/:blog_id",GetBlog)
+			blog.GET("/comment/:blog_id",GetCommentOfBlog)
 			blog.Use(Auth())
 			blog.Use(cors.Default())
 			blog.POST("", AddBlog)
+			blog.POST("/comment",AddComment)
 			blog.DELETE("", DeleteBlog)
 		}
 	}

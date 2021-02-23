@@ -4,7 +4,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"log"
 	"strconv"
-	"time"
 )
 
 func ConvAtoUi(str string) (ui uint) {
@@ -24,7 +23,7 @@ func HashWithSalt(plainText string) (HashText string) {
 	HashText = string(hash)
 	return
 }
-func ParseTimeStampToReadableTime(timestamp int64) time.Time {
+/*func ParseTimeStampToReadableTime(timestamp int64) time.Time {
 	i, err := strconv.ParseInt(strconv.Itoa(int(timestamp)), 10, 64)
 	if err != nil {
 		panic(err)
@@ -32,4 +31,4 @@ func ParseTimeStampToReadableTime(timestamp int64) time.Time {
 	loc, _ := time.LoadLocation("Asia/Shanghai")
 	tm := time.Unix(i, 0).In(loc)
 	return tm
-}
+}*/
