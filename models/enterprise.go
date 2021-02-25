@@ -11,4 +11,6 @@ type Enterprise struct{
 	Name              string
 	BriefIntroduction string
 	Content           string
+	CreaterEmail	  string
+	Image			  string
 }
