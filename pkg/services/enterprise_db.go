@@ -1,6 +1,8 @@
 package services
 
-import "github.com/Pivot-Studio/CSE_Student_Innovation_Project/models"
+import (
+	"github.com/Pivot-Studio/CSE_Student_Innovation_Project/models"
+)
 
 func GetEnterprises(page int,listSize int,isDescent bool)(enterprises []models.Enterprise){
 	if isDescent{
@@ -9,4 +11,8 @@ func GetEnterprises(page int,listSize int,isDescent bool)(enterprises []models.E
 		db.Offset(page* listSize).Limit(listSize).Find(&enterprises)
 	}
 	return enterprises
+}
+func GetOneEnterprise(enterpriseId int)(enterprise models.Enterprise,err error){
+	err=db.Where("id=?",enterpriseId).Find(&enterprise).Error
+	return
 }

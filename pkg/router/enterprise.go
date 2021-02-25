@@ -24,3 +24,22 @@ func GetEnterprises(context *gin.Context){
 	})
 }
 
+func GetEnterpriseDetails(context *gin.Context) {
+	enterpriseId, _ := strconv.Atoi(context.Param("enterprise_id"))
+	enterprise, err := services.GetOneEnterprise(enterpriseId)
+	if err != nil {
+		context.JSON(404, gin.H{`err`: err.Error()})
+	}else{
+		context.JSON(200,gin.H{
+			"enterprise_id":enterprise.ID,
+			"enterprise_name":enterprise.Name,
+			"enterprise_introduction":enterprise.BriefIntroduction,
+			"enterprise_content":enterprise.Content,
+			"enterprise_email":enterprise.Email,
+			"enterprise_phone":enterprise.Phone,
+		})
+	}
+
+
+}
+

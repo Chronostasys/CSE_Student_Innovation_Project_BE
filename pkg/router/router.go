@@ -42,7 +42,7 @@ func InitRouter(r *gin.Engine) {
 		enterprise := api.Group("/enterprise")
 		{
 			enterprise.GET("/enterpriseList", GetEnterprises)
-			enterprise.GET("/enterpriseDetail", )
+			enterprise.GET("/enterpriseDetail/:enterprise_id", GetEnterpriseDetails)
 		}
 		project := api.Group("/project")
 		{
