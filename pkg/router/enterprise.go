@@ -39,7 +39,5 @@ func GetEnterpriseDetails(context *gin.Context) {
 			"enterprise_phone":enterprise.Phone,
 		})
 	}
-
-
 }
 
