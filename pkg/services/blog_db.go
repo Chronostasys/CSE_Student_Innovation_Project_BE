@@ -7,8 +7,8 @@ import "github.com/Pivot-Studio/CSE_Student_Innovation_Project/models"
 //	return teamMember
 //}
 
-func AddBlog(blog *models.Blog)(err error){
-	err=db.Create(blog).Error
+func AddBlog(blog models.Blog)(err error){
+	err=db.Create(&blog).Error
 	return err
 }
 

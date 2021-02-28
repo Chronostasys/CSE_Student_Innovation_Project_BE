@@ -24,7 +24,7 @@ func AddBlog(context *gin.Context) {
 		Title: title,
 		Content: content,
 	}
-	err:=services.AddBlog(&blog)
+	err:=services.AddBlog(blog)
 	if err!=nil{
 		context.JSON(http.StatusInternalServerError,gin.H{
 			"msg":"发布文章失败",
