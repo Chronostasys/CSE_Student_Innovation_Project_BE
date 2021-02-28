@@ -8,11 +8,11 @@ import (
 )
 
 func ConvAtoUi(str string) (ui uint) {
-	int_str, err := strconv.Atoi(str)
+	intStr, err := strconv.Atoi(str)
 	if err != nil {
 		log.Panic(err)
 	}
-	ui = uint(int_str)
+	ui = uint(intStr)
 	return
 }
 

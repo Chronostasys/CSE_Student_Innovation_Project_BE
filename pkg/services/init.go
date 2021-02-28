@@ -67,7 +67,7 @@ func databaseInit() {
 	if (u == models.AuthUser{}) {
 		user := models.AuthUser{
 			Email: "root", Password: passwordhash,
-			Register_timestamp: util.GetTimeStamp(), Is_email_activated: true,
+			RegisterTimestamp: util.GetTimeStamp(),
 			Role: consts.ROOT}
 		db.Create(user)
 	}

@@ -11,20 +11,20 @@ import (
 	"strings"
 )
 
-func Helloworld(g *gin.Context) {
+func HelloWorld(g *gin.Context) {
 	g.JSON(http.StatusOK, gin.H{
 		"code": 200,
-		"msg":  "helloworld",
+		"msg":  "HelloWorld",
 	})
 	return
 }
 func Signup(context *gin.Context) {
 	email := strings.ToLower(context.PostForm("email"))
-	rsa_password := context.PostForm("password")
+	rsaPassword := context.PostForm("password")
 	verifyStr := context.PostForm("verify_code")
 	name :=context.PostForm("name")
 	//password in request is encrypted by rsa,so I should decrypt it first
-	password := rsa_password
+	password := rsaPassword
 
 	if services.IsEmailRegistered(email) {
 		context.JSON(http.StatusBadRequest, gin.H{
@@ -34,10 +34,10 @@ func Signup(context *gin.Context) {
 	}
 	if services.IsVerifyCodeMatchToRegisterAccount(verifyStr, email) {
 		services.RemoveVerifyFromRedis(email)
-		passwordhash := util.HashWithSalt(password)
+		passwordHash := util.HashWithSalt(password)
 		user := models.AuthUser{
-			Email: email, Password: passwordhash,Username: name,
-			Register_timestamp: util.GetTimeStamp(), Is_email_activated: true,
+			Email: email, Password: passwordHash,Username: name,
+			RegisterTimestamp: util.GetTimeStamp(),
 			Role: consts.USER}
 		services.CreateUser(user)
 		token, _ := util.GenerateToken(email, consts.USER)
@@ -69,7 +69,7 @@ func Login(context *gin.Context) {
 		return
 	}
 
-	if isMacth := services.IsEmailAndPasswordMatch(email, password); isMacth {
+	if isMatch := services.IsEmailAndPasswordMatch(email, password); isMatch {
 		context.JSON(http.StatusOK, gin.H{
 			"token":token,
 		})
