@@ -17,7 +17,7 @@ func SendEmail(toEmail string, verifyCode string) (isfinished bool) {
 		}
 	}()
 	emailInit()
-	from := mail.Address{"1037树洞团队", account}
+	from := mail.Address{"Pivot Studio团队-楚天双创项目组", account}
 	to := mail.Address{"亲爱的用户", toEmail}
 	var err error
 	if err = client.Mail(from.Address); err != nil {
@@ -28,7 +28,7 @@ func SendEmail(toEmail string, verifyCode string) (isfinished bool) {
 		log.Panic(err)
 	}
 
-	subj := "HustHole注册"
+	subj := "楚天双创平台注册"
 
 	//===================================
 	//Send a email template
