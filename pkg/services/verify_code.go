@@ -9,7 +9,7 @@ func IsVerifyCodeMatchToRegisterAccount(verifyCode string, email string) (IsMatc
 	//	IsMatch = false
 	//}
 	//return
-	re:=Verify_codes[email]
+	re:= StorageVerifyCode[email]
 	if len(re)!=0&&re==verifyCode{
 		return true
 	}else {
@@ -17,10 +17,10 @@ func IsVerifyCodeMatchToRegisterAccount(verifyCode string, email string) (IsMatc
 	}
 }
 func RemoveVerifyFromRedis(email string) {
-	delete(Verify_codes, email)
+	delete(StorageVerifyCode, email)
 	//Redis_client.Del(consts.REDIS_VERIFY_CODE_SUFFIX + email)
 }
 func StoreEmailAndVerifyCodeInRedis(verifyCode string, email string) {
-	Verify_codes[email]=verifyCode
+	StorageVerifyCode[email]=verifyCode
 	//Redis_client.Set(consts.REDIS_VERIFY_CODE_SUFFIX+email, verifyCode, time.Hour)
 }

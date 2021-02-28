@@ -33,11 +33,12 @@ var servername string
 
 //For Redis services
 var Redis_client *redis.Client
-var Verify_codes map[string]string
+var StorageVerifyCode map[string]string
 func init() {
 	databaseInit()
 	emailInit()
 	redisInit()
+	StorageVerifyCode=make(map[string]string)
 }
 func databaseInit() {
 	conf := util.ReadSettingsFromFile("Config.json")
