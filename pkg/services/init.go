@@ -33,7 +33,7 @@ var servername string
 
 //For Redis services
 var Redis_client *redis.Client
-
+var Verify_codes map[string]string
 func init() {
 	databaseInit()
 	emailInit()
