@@ -2,7 +2,6 @@ package services
 
 import (
 	"fmt"
-	"github.com/Pivot-Studio/Authorization-Template/pkg/ATconsts"
 	"github.com/Pivot-Studio/CSE_Student_Innovation_Project/pkg/consts"
 	"time"
 )
@@ -21,5 +20,5 @@ func RemoveVerifyFromRedis(email string) {
 	Redis_client.Del(consts.REDIS_VERIFY_CODE_SUFFIX + email)
 }
 func StoreEmailAndVerifyCodeInRedis(verifyCode string, email string) {
-	Redis_client.Set(ATconsts.REDIS_VERIFY_CODE_SUFFIX+email, verifyCode, ATconsts.VERIFYCODE_VALID_TIME*time.Second)
+	Redis_client.Set(consts.REDIS_VERIFY_CODE_SUFFIX+email, verifyCode, time.Hour)
 }

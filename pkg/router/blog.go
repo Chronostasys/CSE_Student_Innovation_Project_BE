@@ -109,8 +109,6 @@ func GetBlog(context *gin.Context){
 			"author_name":  user.Username,
 			"publish_time": time.String(),
 		})
-
-
 		return
 	}
 }
